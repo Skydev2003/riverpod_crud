@@ -122,7 +122,7 @@ class NoteScreen extends ConsumerWidget {
             },
             icon: const Icon(Icons.arrow_forward),
           ),
-        ],
+        ], 
       ),
       body: Column(
         children: [
