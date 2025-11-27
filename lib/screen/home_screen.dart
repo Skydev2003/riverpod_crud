@@ -9,8 +9,8 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final name = ref.watch(nameProvider);
-    final couter = ref.watch(couterProvider);
+    final String name = ref.watch(nameProvider);
+    final int couter = ref.watch(couterProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -48,15 +48,15 @@ class HomeScreen extends ConsumerWidget {
             ElevatedButton.icon(
               onPressed: () {
                 // ref.read(couterProvider.notifier).state--;
-                ref.read(nameProvider.notifier).state = 'สกาย';
+                ref.read(nameProvider.notifier).state =
+                    'สกาย';
               },
               label: Text('delete couter'),
             ),
             SizedBox(height: 25),
             ElevatedButton.icon(
-              onPressed: () {
-                ref.read(couterProvider.notifier).state = 0;
-              },
+              onPressed: () =>
+                  ref.read(couterProvider.notifier).state = 0,
               label: Text('reset couter'),
             ),
             SizedBox(height: 40),
