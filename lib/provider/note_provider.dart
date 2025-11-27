@@ -1,22 +1,24 @@
-//สร้าง StateNotifier
 
-import 'package:flutter_riverpod/legacy.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_crud/model/note.dart';
 
-class NoteNotifier extends StateNotifier<List<Note>> {
-  NoteNotifier() : super([]);
 
-  //ฟังก์ชัน เพิ่ม โน๊ต
+// สร้าง NotifieProvider
+class NoteNotifier extends Notifier<List<Note>> {
+  @override
+  List<Note> build() {
+    return [];
+  }
+  // ฟังก์ชัน เพิ่ม 
   void add(Note note) {
     state = [...state, note];
   }
-
-  //ฟังก์ชัน ลบ โน๊ต
+  // ฟังก์ชัน ลบ 
   void delete(String id) {
     state = state.where((n) => n.id != id).toList();
   }
-
-  //ฟังก์ชัน อัพเดต โน๊ต
+  // ฟังก์ชัน อัพเดต 
   void update(Note note) {
     state = [
       for (final n in state)
@@ -24,10 +26,8 @@ class NoteNotifier extends StateNotifier<List<Note>> {
     ];
   }
 }
-
-//สร้าง StateNotifierProvider ให้ UI ใช้งานได้
+// 2. สร้าง Provider โดยใช้ NotifierProvider (ตัดคำว่า State ออก)
 final noteProvider =
-    StateNotifierProvider<NoteNotifier, List<Note>>(
-      (ref) => NoteNotifier(),
+    NotifierProvider<NoteNotifier, List<Note>>(
+      () => NoteNotifier()
     );
-  
