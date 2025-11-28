@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/web.dart';
 import 'package:riverpod_crud/provider/couter_provider.dart';
 import 'package:riverpod_crud/provider/name_provider.dart';
+
+final logger = Logger(printer: PrettyPrinter()); //logger show ที่มา
+
+final loggerNoStack = Logger(printer: PrettyPrinter(methodCount: 0)); //logger ไม่ show ที่มา
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -11,6 +16,9 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final String name = ref.watch(nameProvider);
     final int couter = ref.watch(couterProvider);
+
+    logger.w('$couter');
+    logger.d('$couter');
 
     return Scaffold(
       appBar: AppBar(
@@ -56,7 +64,8 @@ class HomeScreen extends ConsumerWidget {
             SizedBox(height: 25),
             ElevatedButton.icon(
               onPressed: () =>
-                  ref.read(couterProvider.notifier).state = 0,
+                  ref.read(couterProvider.notifier).state =
+                      0,
               label: Text('reset couter'),
             ),
             SizedBox(height: 40),

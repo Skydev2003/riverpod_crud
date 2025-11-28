@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/web.dart';
 import 'package:riverpod_crud/model/note.dart';
 import 'package:riverpod_crud/provider/note_provider.dart';
+
+final logger = Logger();
 
 class NoteScreen extends ConsumerWidget {
   const NoteScreen({super.key});
@@ -10,17 +13,15 @@ class NoteScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notes = ref.watch(noteProvider);
+    logger.i('Open NoteScreen');
 
     //กล่องเพิ่มข้อความ
-    void showAddNoteDialog(
-      BuildContext context,
-      WidgetRef ref,
-    ) {
+    void showAddNoteDialog(BuildContext context) {
       final controller = TextEditingController();
 
       showDialog(
         context: context,
-        builder: (_) {
+        builder: (context) {
           return AlertDialog(
             title: const Text('เพิ่มโน๊ต'),
             content: TextField(
@@ -37,16 +38,31 @@ class NoteScreen extends ConsumerWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  ref
-                      .read(noteProvider.notifier)
-                      .add(
-                        Note(
-                          id: DateTime.now().toString(),
-                          title: controller.text,
-                        ),
-                      );
-
-                  Navigator.pop(context);
+                  try {
+                    // if (controller.text.trim().isEmpty) {
+                    //   throw Exception("ข้อความว่าง");
+                    // }
+                    ref
+                        .read(noteProvider.notifier)
+                        .add(
+                          Note(
+                            id: DateTime.now().toString(),
+                            title: controller.text,
+                          ),
+                        );
+                    Navigator.pop(context);
+                  } catch (e, st) {
+                    logger.e(
+                      'error',
+                      error: e,
+                      stackTrace: st,
+                    );
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(
+                      SnackBar(content: Text('$e')),
+                    );
+                  }
                 },
                 child: const Text('บันทึก'),
               ),
@@ -85,16 +101,31 @@ class NoteScreen extends ConsumerWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  ref
-                      .read(noteProvider.notifier)
-                      .update(
-                        Note(
-                          id: note.id, // ใช้ id เดิม
-                          title: controller
-                              .text, // ข้อความใหม่
-                        ),
-                      );
-
+                  try {
+                    if (controller.text.isEmpty) {
+                      throw (Exception('ค่าว่าง'));
+                    }
+                    ref
+                        .read(noteProvider.notifier)
+                        .update(
+                          Note(
+                            id: note.id, // ใช้ id เดิม
+                            title: controller
+                                .text, // ข้อความใหม่
+                          ),
+                        );
+                  } catch (e, st) {
+                    logger.e(
+                      'error:$e',
+                      error: e,
+                      stackTrace: st,
+                    );
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(
+                      SnackBar(content: Text('error: $e')),
+                    );
+                  }
                   Navigator.pop(context);
                 },
                 child: const Text('บันทึก'),
@@ -122,7 +153,7 @@ class NoteScreen extends ConsumerWidget {
             },
             icon: const Icon(Icons.arrow_forward),
           ),
-        ], 
+        ],
       ),
       body: Column(
         children: [
@@ -151,7 +182,7 @@ class NoteScreen extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showAddNoteDialog(context, ref),
+        onPressed: () => showAddNoteDialog(context),
         child: Text('เพิ่ม '),
       ),
     );

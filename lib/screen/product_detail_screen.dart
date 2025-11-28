@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/web.dart';
 import 'package:riverpod_crud/provider/product_provider.dart';
+
+final logger = Logger(
+  
+);
 
 class ProductDetailScreen extends ConsumerWidget {
   const ProductDetailScreen({required this.id, super.key});
@@ -9,16 +14,19 @@ class ProductDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productAsync = ref.watch(productByIdProvider(id));
+    logger.i('Detail');
+    logger.d('$productAsync');
 
     return Scaffold(
       appBar: AppBar(title: Text('Product Detail')),
       body: productAsync.when(
         data: (i) {
-          return Column(children: [
-            Text(i['name']),
-            Text('฿ ${i['price']}'),
-          ],
-        );
+          return Column(
+            children: [
+              Text(i['name']),
+              Text('฿ ${i['price']}'),
+            ],
+          );
         },
         error: (e, st) => Center(child: Text('$e')),
         loading: () =>

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_crud/routes/app_route.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

@@ -25,5 +25,5 @@ final router = GoRouter(
         return ProductDetailScreen(id: id);
       },
     ),
-  ],
+   ],
 );

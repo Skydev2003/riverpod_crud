@@ -6,5 +6,3 @@ final nameProvider = StateProvider<String>((Ref ref) {
 
   return nameProvider;
 });
-
-
